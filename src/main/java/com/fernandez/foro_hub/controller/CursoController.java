@@ -34,7 +34,6 @@ public class CursoController {
 
         return ResponseEntity.created(uri).body(new DatosDetalleCurso(curso));
     }
-    @Transactional
     @GetMapping
     public ResponseEntity<Page<DatosDetalleCurso>> listar(@PageableDefault(size=10, sort={"nombre"}) Pageable paginacion){
 

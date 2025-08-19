@@ -48,4 +48,10 @@ public class UsuarioController {
                 .map(DatosListaTopico::new);
         return ResponseEntity.ok(page);
     }
+    @DeleteMapping("/{id}")
+    public ResponseEntity eliminar(@PathVariable Long id) {
+        var usuario = repository.getReferenceById(id);
+        usuario.eliminar();
+        return ResponseEntity.noContent().build();
+    }
 }

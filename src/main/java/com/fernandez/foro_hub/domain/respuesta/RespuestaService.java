@@ -33,4 +33,21 @@ public class RespuestaService {
         respuestaRepository.save(respuesta);
         return new DatosDetalleRespuesta(respuesta);
     }
+
+    @Transactional
+    public Respuesta actualizar(DatosActualizacionRespuesta datos) {
+        if (!respuestaRepository.existsById(datos.id())) {
+            throw new ValidacionException("Id de la respuesta informada no existe");
+        }
+        var respuesta = respuestaRepository.getReferenceById(datos.id());
+        respuesta.actualizarInformaciones(datos);
+        return respuesta;
+    }
+
+    public Respuesta detallar(Long id) {
+        if (!respuestaRepository.existsById(id)) {
+            throw new ValidacionException("Id de la respuesta informada no existe");
+        }
+        return respuestaRepository.getReferenceById(id);
+    }
 }

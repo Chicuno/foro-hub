@@ -8,5 +8,6 @@ public interface TopicoRepository extends JpaRepository<Topico, Long> {
     Page<Topico> findByAutorId(Long autorId, Pageable paginacion);
     Page<Topico> findByCursoId(Long cursoId, Pageable paginacion);
     Page<Topico> findByStatus(Status status, Pageable paginacion);
-}
 
+    boolean existsByIdAndAutorNombreUsuario(Long topicoId, String username);
+}

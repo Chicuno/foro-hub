@@ -35,6 +35,5 @@ public class Curso {
         this.topicos.add(topico);
         topico.setCurso(this);
     }
-
 }
 
