@@ -10,8 +10,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
-import java.util.List;
-
 @Service
 public class TopicoService {
 
@@ -59,12 +57,12 @@ public class TopicoService {
         topico.eliminar();
     }
 
-    public Page listar (Pageable paginacion) {
+    public Page<DatosListaTopico> listar(Pageable paginacion) {
        return topicoRepository.findAll(paginacion)
                .map(DatosListaTopico::new);
     }
 
-    public Page listarPorStatus(Status status, Pageable paginacion) {
+    public Page<DatosListaTopico> listarPorStatus(Status status, Pageable paginacion) {
         return topicoRepository.findByStatus(status, paginacion)
                 .map(DatosListaTopico::new);
     }

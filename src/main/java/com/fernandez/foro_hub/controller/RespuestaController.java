@@ -1,7 +1,6 @@
 package com.fernandez.foro_hub.controller;
 
 import com.fernandez.foro_hub.domain.respuesta.*;
-import com.fernandez.foro_hub.infra.security.SecurityService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -21,12 +20,10 @@ public class RespuestaController {
     private RespuestaService service;
     @Autowired
     private RespuestaRepository repository;
-    @Autowired
-    private SecurityService securityService;
 
     @Transactional
     @PostMapping
-    public ResponseEntity registrar(@RequestBody @Valid DatosRegistroRespuesta datos, UriComponentsBuilder uriComponentsBuilder) {
+    public ResponseEntity<DatosDetalleRespuesta> registrar(@RequestBody @Valid DatosRegistroRespuesta datos, UriComponentsBuilder uriComponentsBuilder) {
         var detallesRespuesta = service.crear(datos);
         var uri = uriComponentsBuilder.path("/respuestas/{id}").buildAndExpand(detallesRespuesta.id()).toUri();
 
@@ -42,14 +39,14 @@ public class RespuestaController {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity detallar(@PathVariable Long id) {
+    public ResponseEntity<DatosDetalleRespuesta> detallar(@PathVariable Long id) {
         var respuesta = service.detallar(id);
         return ResponseEntity.ok(new DatosDetalleRespuesta(respuesta));
     }
 
     @PutMapping
     @PreAuthorize("@securityService.puedeEditarRespuesta(authentication, #datos.id())")
-    public ResponseEntity actualizar(@RequestBody @Valid DatosActualizacionRespuesta datos) {
+    public ResponseEntity<DatosDetalleRespuesta> actualizar(@RequestBody @Valid DatosActualizacionRespuesta datos) {
         var respuesta = service.actualizar(datos);
         return ResponseEntity.ok(new DatosDetalleRespuesta(respuesta));
     }

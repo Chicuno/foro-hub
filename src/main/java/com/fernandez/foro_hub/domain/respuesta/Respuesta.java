@@ -1,6 +1,5 @@
 package com.fernandez.foro_hub.domain.respuesta;
 
-import com.fernandez.foro_hub.domain.topico.DatosActualizacionTopico;
 import com.fernandez.foro_hub.domain.topico.Topico;
 import com.fernandez.foro_hub.domain.usuario.Usuario;
 import jakarta.persistence.*;

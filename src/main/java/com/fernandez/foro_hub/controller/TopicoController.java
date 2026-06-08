@@ -3,7 +3,6 @@ package com.fernandez.foro_hub.controller;
 import com.fernandez.foro_hub.domain.curso.CursoRepository;
 import com.fernandez.foro_hub.domain.topico.*;
 import com.fernandez.foro_hub.domain.usuario.UsuarioRepository;
-import com.fernandez.foro_hub.infra.security.SecurityService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -28,32 +27,30 @@ public class TopicoController {
     CursoRepository cursoRepository;
     @Autowired
     UsuarioRepository usuarioRepository;
-    @Autowired
-    private SecurityService securityService;
 
     @PostMapping
-    public ResponseEntity registrar(@RequestBody @Valid DatosCreacionTopico datos, UriComponentsBuilder uriComponentsBuilder) {
-        var detallesTopico = service.crear(datos);
-        var uri = uriComponentsBuilder.path("/topicos/{id}").buildAndExpand(detallesTopico.id()).toUri();
-        return ResponseEntity.created(uri).body(detallesTopico);
+    public ResponseEntity<DatosListaTopico> registrar(@RequestBody @Valid DatosCreacionTopico datos, UriComponentsBuilder uriComponentsBuilder) {
+        var topicoCreado = service.crear(datos);
+        var uri = uriComponentsBuilder.path("/topicos/{id}").buildAndExpand(topicoCreado.id()).toUri();
+        return ResponseEntity.created(uri).body(topicoCreado);
     }
 
     @GetMapping
     public ResponseEntity<Page<DatosListaTopico>> listar(@PageableDefault(size=10, sort={"fechaCreacion"}, direction = Sort.Direction.DESC) Pageable paginacion){
-        var page = service.listar(paginacion);
+        Page<DatosListaTopico> page = service.listar(paginacion);
 
         return ResponseEntity.ok(page);
     }
 
     @GetMapping("/antiguos-primero")
     public ResponseEntity<Page<DatosListaTopico>> listarAntiguosPrimero(@PageableDefault(size=10, sort={"fechaCreacion"}) Pageable paginacion){
-        var page = service.listar(paginacion);
+        Page<DatosListaTopico> page = service.listar(paginacion);
 
         return ResponseEntity.ok(page);
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity detallar(@PathVariable Long id) {
+    public ResponseEntity<DatosDetalleTopico> detallar(@PathVariable Long id) {
         var topico = service.detallar(id);
         return ResponseEntity.ok(new DatosDetalleTopico(topico));
     }
@@ -66,13 +63,13 @@ public class TopicoController {
 
     @PutMapping
     @PreAuthorize("@securityService.puedeEditarTopico(authentication, #datos.id())")
-    public ResponseEntity actualizar(@RequestBody @Valid DatosActualizacionTopico datos) {
+    public ResponseEntity<DatosDetalleTopico> actualizar(@RequestBody @Valid DatosActualizacionTopico datos) {
         var topico = service.actualizar(datos);
         return ResponseEntity.ok(new DatosDetalleTopico(topico));
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity eliminar(@PathVariable Long id) {
+    public ResponseEntity<Void> eliminar(@PathVariable Long id) {
         service.eliminar(id);
         return ResponseEntity.noContent().build();
     }

@@ -13,6 +13,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.util.UriComponentsBuilder;
@@ -21,13 +22,18 @@ import org.springframework.web.util.UriComponentsBuilder;
 @RequestMapping("/usuarios")
 public class UsuarioController {
 
-    @Autowired private UsuarioRepository repository;
-    @Autowired private TopicoRepository topicoRepository;
+    @Autowired
+    private PasswordEncoder passwordEncoder;
+    @Autowired 
+    private UsuarioRepository repository;
+    @Autowired 
+    private TopicoRepository topicoRepository;
 
     @Transactional
     @PostMapping
-    public ResponseEntity registrar(@RequestBody @Valid DatosRegistroUsuario datos, UriComponentsBuilder uriComponentsBuilder) {
+    public ResponseEntity<DatosDetalleUsuario> registrar(@RequestBody @Valid DatosRegistroUsuario datos, UriComponentsBuilder uriComponentsBuilder) {
         var usuario = new Usuario(datos);
+        usuario.setContrasena(passwordEncoder.encode(datos.contrasena()));
         repository.save(usuario);
         var uri = uriComponentsBuilder.path("/usuarios/{id}").buildAndExpand(usuario.getId()).toUri();
 
@@ -49,7 +55,7 @@ public class UsuarioController {
         return ResponseEntity.ok(page);
     }
     @DeleteMapping("/{id}")
-    public ResponseEntity eliminar(@PathVariable Long id) {
+    public ResponseEntity<Void> eliminar(@PathVariable Long id) {
         var usuario = repository.getReferenceById(id);
         usuario.eliminar();
         return ResponseEntity.noContent().build();

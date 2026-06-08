@@ -1,9 +1,6 @@
 package com.fernandez.foro_hub.domain.topico;
 
-import com.fernandez.foro_hub.domain.curso.Curso;
 import com.fernandez.foro_hub.domain.respuesta.Respuesta;
-import com.fernandez.foro_hub.domain.usuario.Usuario;
-
 import java.time.LocalDateTime;
 import java.util.List;
 
