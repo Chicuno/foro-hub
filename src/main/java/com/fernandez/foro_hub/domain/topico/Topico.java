@@ -17,7 +17,6 @@ import java.util.List;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-@EqualsAndHashCode(of = "id")
 
 public class Topico {
 
@@ -65,6 +64,21 @@ public class Topico {
 
     public void eliminar() {
         this.activo = false;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+    if (this == o) return true;
+    if (!(o instanceof Topico)) return false;
+    Topico topico = (Topico) o;
+    // Si el ID es nulo (no guardado), solo son el mismo objeto si comparten la misma referencia en memoria
+    return id != null && id.equals(topico.getId());
+}
+
+    @Override
+    public int hashCode() {
+        // Retorna el hash de la clase para mantenerlo constante antes y después del "save"
+        return getClass().hashCode(); 
     }
 
 }

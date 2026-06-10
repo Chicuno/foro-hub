@@ -13,13 +13,16 @@ import java.util.List;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-@EqualsAndHashCode(of = "id")
+@EqualsAndHashCode(onlyExplicitlyIncluded = true)
 public class Curso {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    @Column(nullable = false)
+
+    @EqualsAndHashCode.Include
+    @Column(nullable = false, unique = true)
     private String nombre;
+    
     @Enumerated(EnumType.STRING)
     private Categoria categoria;
 

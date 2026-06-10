@@ -19,13 +19,14 @@ import java.util.List;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-@EqualsAndHashCode(of = "id")
+@EqualsAndHashCode(onlyExplicitlyIncluded = true)
 public class Usuario implements UserDetails {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     private String nombre;
-    @Column(unique = true)
+    @EqualsAndHashCode.Include 
+    @Column(unique = true, nullable = false)
     private String correoElectronico;
     private String nombreUsuario;
     private String contrasena;

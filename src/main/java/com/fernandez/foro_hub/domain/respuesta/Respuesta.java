@@ -15,7 +15,6 @@ import java.time.LocalDateTime;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-@EqualsAndHashCode(of = "id")
 public class Respuesta {
 
     @Id
@@ -45,5 +44,19 @@ public class Respuesta {
         if(datos.mensaje() != null) {
             this.mensaje = datos.mensaje();
         }
+    }
+
+    @Override
+    public boolean equals(Object o) {
+    if (this == o) return true;
+    if (!(o instanceof Respuesta)) return false;
+    Respuesta respuesta = (Respuesta) o;
+    return id != null && id.equals(respuesta.getId());
+    }
+
+    @Override
+    public int hashCode() {
+    // Mantiene el hash constante sin importar si el ID pasa de null a un número tras el save()
+    return getClass().hashCode();
     }
 }
