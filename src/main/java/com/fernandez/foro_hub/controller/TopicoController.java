@@ -52,7 +52,7 @@ public class TopicoController {
     @GetMapping("/{id}")
     public ResponseEntity<DatosDetalleTopico> detallar(@PathVariable Long id) {
         var topico = service.detallar(id);
-        return ResponseEntity.ok(new DatosDetalleTopico(topico));
+        return ResponseEntity.ok(topico);
     }
 
     @GetMapping("/por-status/{status}")
@@ -65,7 +65,7 @@ public class TopicoController {
     @PreAuthorize("@securityService.puedeEditarTopico(authentication, #datos.id())")
     public ResponseEntity<DatosDetalleTopico> actualizar(@RequestBody @Valid DatosActualizacionTopico datos) {
         var topico = service.actualizar(datos);
-        return ResponseEntity.ok(new DatosDetalleTopico(topico));
+        return ResponseEntity.ok(topico);
     }
 
     @DeleteMapping("/{id}")

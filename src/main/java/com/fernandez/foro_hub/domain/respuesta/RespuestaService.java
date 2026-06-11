@@ -44,10 +44,12 @@ public class RespuestaService {
         return respuesta;
     }
 
-    public Respuesta detallar(Long id) {
+    @Transactional(readOnly = true)
+    public DatosDetalleRespuesta detallar(Long id) {
         if (!respuestaRepository.existsById(id)) {
             throw new ValidacionException("Id de la respuesta informada no existe");
         }
-        return respuestaRepository.getReferenceById(id);
+        var respuesta = respuestaRepository.getReferenceById(id);
+        return new DatosDetalleRespuesta(respuesta);
     }
 }

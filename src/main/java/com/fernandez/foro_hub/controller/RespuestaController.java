@@ -41,7 +41,7 @@ public class RespuestaController {
     @GetMapping("/{id}")
     public ResponseEntity<DatosDetalleRespuesta> detallar(@PathVariable Long id) {
         var respuesta = service.detallar(id);
-        return ResponseEntity.ok(new DatosDetalleRespuesta(respuesta));
+        return ResponseEntity.ok(respuesta);
     }
 
     @PutMapping

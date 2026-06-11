@@ -44,7 +44,7 @@ public class CursoController {
 
     @GetMapping("/{cursoId}/topicos")
     public ResponseEntity<Page<DatosListaTopico>> listarTopicosDelCurso(@PathVariable Long cursoId, @PageableDefault(size=10, sort={"fechaCreacion"}, direction = Sort.Direction.DESC) Pageable paginacion){
-        var page = topicoRepository.findByCursoId(cursoId, paginacion)
+        var page = topicoRepository.findByCursoIdAndActivoTrue(cursoId, paginacion)
                 .map(DatosListaTopico::new);
         return ResponseEntity.ok(page);
     }

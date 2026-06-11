@@ -54,7 +54,7 @@ public class GestorDeErrores {
     public ResponseEntity<String> gestionarErrorAccesoDenegado() {
         return ResponseEntity.status(HttpStatus.FORBIDDEN).body("Acceso denegado");
     }
-
+    
     @ExceptionHandler(Exception.class)
     public ResponseEntity<String> gestionarError500(Exception ex) {
         return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error: " + ex.getLocalizedMessage());

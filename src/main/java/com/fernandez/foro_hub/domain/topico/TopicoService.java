@@ -10,6 +10,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
+
 @Service
 public class TopicoService {
 
@@ -40,38 +41,34 @@ public class TopicoService {
     }
 
     @Transactional
-    public Topico actualizar(DatosActualizacionTopico datos) {
-        if (!topicoRepository.existsById(datos.id())) {
-            throw new ValidacionException("Id del tópico informado no existe");
-        }
-        var topico = topicoRepository.getReferenceById(datos.id());
+    public DatosDetalleTopico actualizar(DatosActualizacionTopico datos) {
+        var topico = topicoRepository.findByIdAndActivoTrue(datos.id())
+                .orElseThrow(() -> new ValidacionException("Id del topico informado no existe"));
         topico.actualizarInformaciones(datos);
-        return topico;
+        return new DatosDetalleTopico(topico);
     }
 
+    @Transactional
     public void eliminar(Long id) {
-        if (!topicoRepository.existsById(id)) {
-            throw new ValidacionException("Id del tópico informado no existe");
-        }
-        var topico = topicoRepository.getReferenceById(id);
+        var topico = topicoRepository.findByIdAndActivoTrue(id)
+                .orElseThrow(() -> new ValidacionException("Id del topico informado no existe"));
         topico.eliminar();
     }
 
     public Page<DatosListaTopico> listar(Pageable paginacion) {
-       return topicoRepository.findAll(paginacion)
-               .map(DatosListaTopico::new);
-    }
-
-    public Page<DatosListaTopico> listarPorStatus(Status status, Pageable paginacion) {
-        return topicoRepository.findByStatus(status, paginacion)
+        return topicoRepository.findByActivoTrue(paginacion)
                 .map(DatosListaTopico::new);
     }
 
-    public Topico detallar(Long id) {
-        if (!topicoRepository.existsById(id)) {
-            throw new ValidacionException("Id del tópico informado no existe");
-        }
-        return topicoRepository.getReferenceById(id);
+    public Page<DatosListaTopico> listarPorStatus(Status status, Pageable paginacion) {
+        return topicoRepository.findByStatusAndActivoTrue(status, paginacion)
+                .map(DatosListaTopico::new);
     }
 
+    @Transactional(readOnly = true)
+    public DatosDetalleTopico detallar(Long id) {
+        var topico = topicoRepository.findByIdAndActivoTrue(id)
+                .orElseThrow(() -> new ValidacionException("Id del topico informado no existe"));
+        return new DatosDetalleTopico(topico);
+    }
 }

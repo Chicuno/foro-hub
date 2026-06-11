@@ -1,6 +1,7 @@
 package com.fernandez.foro_hub.infra.security;
 
 import com.fernandez.foro_hub.domain.topico.TopicoRepository;
+import com.fernandez.foro_hub.domain.respuesta.RespuestaRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
@@ -10,6 +11,8 @@ public class SecurityService {
 
     @Autowired
     private TopicoRepository topicoRepository;
+    @Autowired
+    private RespuestaRepository respuestaRepository;
 
     public boolean puedeEditarTopico(Authentication authentication, Long topicoId) {
         if (authentication == null) return false;
@@ -30,7 +33,7 @@ public class SecurityService {
     public boolean esPropietarioDelTopico(Long topicoId, Authentication authentication) {
         if (authentication == null || topicoId == null) return false;
         String username = authentication.getName();
-        return topicoRepository.existsByIdAndAutorNombreUsuario(topicoId, username);
+        return topicoRepository.existsByIdAndAutorNombreUsuarioAndActivoTrue(topicoId, username);
     }
 
     public boolean puedeEditarRespuesta(Authentication authentication, Long respuestaId) {
@@ -52,6 +55,6 @@ public class SecurityService {
     public boolean esPropietarioDeLaRespuesta(Long respuestaId, Authentication authentication) {
         if (authentication == null || respuestaId == null) return false;
         String username = authentication.getName();
-        return topicoRepository.existsByIdAndAutorNombreUsuario(respuestaId, username);
+        return respuestaRepository.existsByIdAndAutorNombreUsuario(respuestaId, username);
     }
 }

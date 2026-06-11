@@ -4,6 +4,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
+import org.springframework.http.HttpStatus;
 import org.springframework.security.access.expression.method.DefaultMethodSecurityExpressionHandler;
 import org.springframework.security.access.expression.method.MethodSecurityExpressionHandler;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -17,7 +18,6 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
-
 @Configuration
 @EnableWebSecurity
 public class SecurityConfigurations {
@@ -28,25 +28,36 @@ public class SecurityConfigurations {
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         return http.csrf(csrf -> csrf.disable())
-                .sessionManagement(sm -> sm.sessionCreationPolicy(SessionCreationPolicy.STATELESS)) // Indicamos que no creamos sesiones, es un sistema stateless. No creamos sesiones, no guardamos datos en el navegador, no guardamos cookies, etc.
+                .sessionManagement(sm -> sm.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
+                .exceptionHandling(eh -> eh
+                        .authenticationEntryPoint((request, response, ex) -> {
+                            response.setStatus(HttpStatus.UNAUTHORIZED.value());
+                            response.setContentType("text/plain;charset=UTF-8");
+                            response.getWriter().write("No autenticado");
+                        })
+                        .accessDeniedHandler((request, response, ex) -> {
+                            response.setStatus(HttpStatus.FORBIDDEN.value());
+                            response.setContentType("text/plain;charset=UTF-8");
+                            response.getWriter().write("Acceso denegado");
+                        }))
                 .authorizeHttpRequests((authorizeHttpRequests) -> authorizeHttpRequests
                         .requestMatchers(HttpMethod.POST, "/login").permitAll()
 
-                        .requestMatchers(HttpMethod.POST, "/cursos").hasRole("ADMINISTRADOR")
+                        .requestMatchers(HttpMethod.POST, "/cursos").hasAnyRole("ADMINISTRADOR", "PROFESOR")
                         .requestMatchers(HttpMethod.GET, "/cursos").hasAnyRole("ADMINISTRADOR", "PROFESOR", "ALUMNO")
                         .requestMatchers(HttpMethod.GET, "/cursos/{id}").hasAnyRole("ADMINISTRADOR", "PROFESOR", "ALUMNO")
 
                         .requestMatchers(HttpMethod.POST, "/usuarios").hasRole("ADMINISTRADOR")
                         .requestMatchers(HttpMethod.GET, "/usuarios").hasAnyRole("ADMINISTRADOR", "PROFESOR")
                         .requestMatchers(HttpMethod.GET, "/usuarios/{usuarioId}/topicos").hasAnyRole("ADMINISTRADOR", "PROFESOR", "ALUMNO")
-                        .requestMatchers(HttpMethod.DELETE, "/usuarios/{id}").hasAnyRole("ADMINISTRADOR", "PROFESOR")
+                        .requestMatchers(HttpMethod.DELETE, "/usuarios/{id}").hasAnyRole("ADMINISTRADOR")
 
                         .requestMatchers(HttpMethod.POST, "/topicos").hasAnyRole("ADMINISTRADOR", "PROFESOR", "ALUMNO")
                         .requestMatchers(HttpMethod.GET, "/topicos").hasAnyRole("ADMINISTRADOR", "PROFESOR", "ALUMNO")
                         .requestMatchers(HttpMethod.GET, "/topicos/{id}").hasAnyRole("ADMINISTRADOR", "PROFESOR", "ALUMNO")
                         .requestMatchers(HttpMethod.GET, "/topicos/{id}/respuestas").hasAnyRole("ADMINISTRADOR", "PROFESOR", "ALUMNO")
                         .requestMatchers(HttpMethod.PUT, "/topicos/{id}").authenticated()
-                        .requestMatchers(HttpMethod.DELETE, "/topicos").hasAnyRole("ADMIN", "PROFESOR")
+                        .requestMatchers(HttpMethod.DELETE, "/topicos/{id}").hasAnyRole("ADMIN", "PROFESOR")
 
                         .requestMatchers(HttpMethod.POST, "/respuestas").hasAnyRole("ADMINISTRADOR", "PROFESOR", "ALUMNO")
                         .requestMatchers(HttpMethod.GET, "/respuestas").hasAnyRole("ADMINISTRADOR", "PROFESOR", "ALUMNO")
@@ -55,12 +66,10 @@ public class SecurityConfigurations {
                         .requestMatchers(HttpMethod.DELETE, "/respuestas").hasAnyRole("ADMINISTRADOR", "PROFESOR")
 
                         .requestMatchers("/v3/api-docs/**", "/swagger-ui.html", "/swagger-ui/**").permitAll()
-                        .anyRequest().authenticated()
-                )
+                        .anyRequest().authenticated())
                 .addFilterBefore(securityFilter, UsernamePasswordAuthenticationFilter.class)
                 .build();
     }
-
 
     @Bean
     public AuthenticationManager authenticationManager(AuthenticationConfiguration configuration) throws Exception {
@@ -81,4 +90,3 @@ public class SecurityConfigurations {
         }
     }
 }
-

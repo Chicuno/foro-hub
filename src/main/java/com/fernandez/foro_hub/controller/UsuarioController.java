@@ -2,6 +2,7 @@ package com.fernandez.foro_hub.controller;
 
 import com.fernandez.foro_hub.domain.topico.DatosListaTopico;
 import com.fernandez.foro_hub.domain.topico.TopicoRepository;
+import com.fernandez.foro_hub.domain.ValidacionException;
 import com.fernandez.foro_hub.domain.usuario.DatosDetalleUsuario;
 import com.fernandez.foro_hub.domain.usuario.DatosRegistroUsuario;
 import com.fernandez.foro_hub.domain.usuario.Usuario;
@@ -43,20 +44,22 @@ public class UsuarioController {
     @GetMapping
     public ResponseEntity<Page<DatosDetalleUsuario>> listar(@PageableDefault(size=10, sort={"nombre"}) Pageable paginacion){
 
-        var page = repository.findAll(paginacion)
+        var page = repository.findByActivoTrue(paginacion)
                 .map(DatosDetalleUsuario::new);
         return ResponseEntity.ok(page);
     }
 
     @GetMapping("/{usuarioId}/topicos")
     public ResponseEntity<Page<DatosListaTopico>> listarTopicosDeUsuario(@PathVariable Long usuarioId, @PageableDefault(size=10, sort={"fechaCreacion"}, direction = Sort.Direction.DESC) Pageable paginacion){
-        var page = topicoRepository.findByAutorId(usuarioId, paginacion)
+        var page = topicoRepository.findByAutorIdAndActivoTrue(usuarioId, paginacion)
                 .map(DatosListaTopico::new);
         return ResponseEntity.ok(page);
     }
+    @Transactional
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> eliminar(@PathVariable Long id) {
-        var usuario = repository.getReferenceById(id);
+        var usuario = repository.findByIdAndActivoTrue(id)
+                .orElseThrow(() -> new ValidacionException("Id del usuario informado no existe"));
         usuario.eliminar();
         return ResponseEntity.noContent().build();
     }
