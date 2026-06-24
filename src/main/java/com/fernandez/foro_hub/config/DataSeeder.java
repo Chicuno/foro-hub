@@ -13,9 +13,9 @@ import com.fernandez.foro_hub.domain.curso.Curso;
 import com.fernandez.foro_hub.domain.curso.CursoRepository;
 import com.fernandez.foro_hub.domain.respuesta.Respuesta;
 import com.fernandez.foro_hub.domain.respuesta.RespuestaRepository;
-import com.fernandez.foro_hub.domain.topico.Status;
-import com.fernandez.foro_hub.domain.topico.Topico;
-import com.fernandez.foro_hub.domain.topico.TopicoRepository;
+import com.fernandez.foro_hub.domain.pregunta.Status;
+import com.fernandez.foro_hub.domain.pregunta.Pregunta;
+import com.fernandez.foro_hub.domain.pregunta.PreguntaRepository;
 import com.fernandez.foro_hub.domain.usuario.Perfil;
 import com.fernandez.foro_hub.domain.usuario.Usuario;
 import com.fernandez.foro_hub.domain.usuario.UsuarioRepository;
@@ -28,7 +28,7 @@ public class DataSeeder implements CommandLineRunner {
 
     private final UsuarioRepository usuarioRepository;
     private final CursoRepository cursoRepository;
-    private final TopicoRepository topicoRepository;
+    private final PreguntaRepository preguntaRepository;
     private final RespuestaRepository respuestaRepository;
     private final PasswordEncoder passwordEncoder;
 
@@ -39,13 +39,13 @@ public class DataSeeder implements CommandLineRunner {
             JdbcTemplate jdbcTemplate,
             PasswordEncoder passwordEncoder,
             CursoRepository cursoRepository,
-            TopicoRepository topicoRepository,
+            PreguntaRepository preguntaRepository,
             RespuestaRepository respuestaRepository) {
 
         this.usuarioRepository = usuarioRepository;
         this.passwordEncoder = passwordEncoder;
         this.cursoRepository = cursoRepository;
-        this.topicoRepository = topicoRepository;
+        this.preguntaRepository = preguntaRepository;
         this.respuestaRepository = respuestaRepository;
     }
 
@@ -64,8 +64,8 @@ public class DataSeeder implements CommandLineRunner {
     }
 
 
-    if(topicoRepository.count() == 0){
-        crearTopicos();
+    if(preguntaRepository.count() == 0){
+        crearPreguntas();
     }
 
     if(respuestaRepository.count() == 0){
@@ -231,7 +231,7 @@ public class DataSeeder implements CommandLineRunner {
 
 }
 
-    private void crearTopicos() {
+    private void crearPreguntas() {
 
     Curso springBoot = cursoRepository.findByNombre("Spring Boot API REST").orElseThrow();
 
@@ -249,7 +249,7 @@ public class DataSeeder implements CommandLineRunner {
 
     Curso microservicios = cursoRepository.findByNombre("Microservicios con Spring Cloud").orElseThrow();
 
-crearTopico(
+crearPregunta(
         "Error al levantar Spring Boot",
         "Mi aplicación no inicia al ejecutar el proyecto y muestra errores en consola.",
         springBoot,
@@ -257,7 +257,7 @@ crearTopico(
 );
 
 
-crearTopico(
+crearPregunta(
         "Problema con relación ManyToOne en JPA",
         "Al guardar una entidad relacionada recibo un error de persistencia.",
         jpa,
@@ -265,7 +265,7 @@ crearTopico(
 );
 
 
-crearTopico(
+crearPregunta(
         "JWT devuelve error 403",
         "El token se genera correctamente pero no puedo acceder a los endpoints protegidos.",
         security,
@@ -273,7 +273,7 @@ crearTopico(
 );
 
 
-crearTopico(
+crearPregunta(
         "Error al conectar MySQL con Spring Boot",
         "La aplicación no logra conectarse a la base de datos configurada.",
         sql,
@@ -281,7 +281,7 @@ crearTopico(
 );
 
 
-crearTopico(
+crearPregunta(
         "Problema usando Pageable en Spring Data",
         "La paginación no devuelve los resultados esperados.",
         springBoot,
@@ -289,7 +289,7 @@ crearTopico(
 );
 
 
-crearTopico(
+crearPregunta(
         "Validaciones con @Valid no funcionan",
         "Al enviar datos incorrectos el controlador permite continuar.",
         springBoot,
@@ -297,7 +297,7 @@ crearTopico(
 );
 
 
-crearTopico(
+crearPregunta(
         "Error al convertir Entity a DTO",
         "Al convertir entidades pierdo información de las relaciones.",
         jpa,
@@ -305,7 +305,7 @@ crearTopico(
 );
 
 
-crearTopico(
+crearPregunta(
         "LazyInitializationException en Hibernate",
         "Al consultar una relación aparece un error de sesión cerrada.",
         jpa,
@@ -313,7 +313,7 @@ crearTopico(
 );
 
 
-crearTopico(
+crearPregunta(
         "Configurar variables de entorno en Spring Boot",
         "Quiero separar mis credenciales del archivo application.properties.",
         springBoot,
@@ -321,7 +321,7 @@ crearTopico(
 );
 
 
-crearTopico(
+crearPregunta(
         "Crear relaciones bidireccionales en JPA",
         "No sé cuál es la mejor forma de mapear relaciones entre entidades.",
         jpa,
@@ -329,7 +329,7 @@ crearTopico(
 );
 
 
-crearTopico(
+crearPregunta(
         "Problema con anotación @Transactional",
         "Los cambios no se guardan aunque el método se ejecuta.",
         springBoot,
@@ -337,7 +337,7 @@ crearTopico(
 );
 
 
-crearTopico(
+crearPregunta(
         "Spring Security bloquea mi endpoint",
         "Un endpoint público está solicitando autenticación.",
         security,
@@ -345,7 +345,7 @@ crearTopico(
 );
 
 
-crearTopico(
+crearPregunta(
         "Error al crear un Bean en Spring",
         "El contexto no logra encontrar una dependencia.",
         springBoot,
@@ -353,7 +353,7 @@ crearTopico(
 );
 
 
-crearTopico(
+crearPregunta(
         "Problema con inyección de dependencias",
         "Spring no crea correctamente una instancia del servicio.",
         springBoot,
@@ -361,7 +361,7 @@ crearTopico(
 );
 
 
-crearTopico(
+crearPregunta(
         "No funciona @Autowired",
         "La dependencia aparece como null.",
         springBoot,
@@ -369,7 +369,7 @@ crearTopico(
 );
 
 
-crearTopico(
+crearPregunta(
         "Error con migraciones Flyway",
         "La aplicación falla al agregar una migración.",
         sql,
@@ -377,7 +377,7 @@ crearTopico(
 );
 
 
-crearTopico(
+crearPregunta(
         "Problema con enums en JPA",
         "No puedo guardar correctamente un enum.",
         jpa,
@@ -385,7 +385,7 @@ crearTopico(
 );
 
 
-crearTopico(
+crearPregunta(
         "Error usando Lombok",
         "Las anotaciones no generan los métodos esperados.",
         java,
@@ -393,7 +393,7 @@ crearTopico(
 );
 
 
-crearTopico(
+crearPregunta(
         "Configurar CORS en Spring Boot",
         "El frontend no puede consumir la API.",
         springBoot,
@@ -401,7 +401,7 @@ crearTopico(
 );
 
 
-crearTopico(
+crearPregunta(
         "Problema con consumo de API externa",
         "No logro mapear la respuesta JSON.",
         springBoot,
@@ -409,7 +409,7 @@ crearTopico(
 );
 
 
-crearTopico(
+crearPregunta(
         "RestTemplate no devuelve datos",
         "La llamada responde pero no obtengo el objeto.",
         springBoot,
@@ -417,7 +417,7 @@ crearTopico(
 );
 
 
-crearTopico(
+crearPregunta(
         "Migrar de RestTemplate a WebClient",
         "Quiero usar programación reactiva.",
         microservicios,
@@ -425,7 +425,7 @@ crearTopico(
 );
 
 
-crearTopico(
+crearPregunta(
         "Error en endpoint POST",
         "El controlador devuelve error 400.",
         springBoot,
@@ -433,7 +433,7 @@ crearTopico(
 );
 
 
-crearTopico(
+crearPregunta(
         "Problema con RequestBody y DTO",
         "Los datos enviados no llegan correctamente.",
         springBoot,
@@ -441,7 +441,7 @@ crearTopico(
 );
 
 
-crearTopico(
+crearPregunta(
         "Manejo de excepciones global en Spring",
         "Quiero respuestas personalizadas para errores.",
         springBoot,
@@ -449,7 +449,7 @@ crearTopico(
 );
 
 
-crearTopico(
+crearPregunta(
         "Crear paginación con Spring Boot",
         "Necesito mostrar resultados por páginas.",
         springBoot,
@@ -457,7 +457,7 @@ crearTopico(
 );
 
 
-crearTopico(
+crearPregunta(
         "Problema con ordenamiento de consultas",
         "Los resultados no aparecen ordenados.",
         sql,
@@ -465,7 +465,7 @@ crearTopico(
 );
 
 
-crearTopico(
+crearPregunta(
         "Consulta personalizada con JPQL",
         "Necesito filtros específicos en consultas.",
         jpa,
@@ -473,7 +473,7 @@ crearTopico(
 );
 
 
-crearTopico(
+crearPregunta(
         "Error usando nativeQuery",
         "La consulta SQL funciona pero falla en JPA.",
         sql,
@@ -481,7 +481,7 @@ crearTopico(
 );
 
 
-crearTopico(
+crearPregunta(
         "Problema con relaciones OneToMany",
         "Los elementos hijos no se guardan.",
         jpa,
@@ -489,7 +489,7 @@ crearTopico(
 );
 
 
-crearTopico(
+crearPregunta(
         "Eliminar entidades relacionadas en JPA",
         "Quedan registros relacionados al borrar.",
         jpa,
@@ -497,7 +497,7 @@ crearTopico(
 );
 
 
-crearTopico(
+crearPregunta(
         "Problema con claves foráneas",
         "La base de datos rechaza una operación.",
         sql,
@@ -505,7 +505,7 @@ crearTopico(
 );
 
 
-crearTopico(
+crearPregunta(
         "Configurar PostgreSQL con Spring Boot",
         "Quiero cambiar MySQL por PostgreSQL.",
         sql,
@@ -513,7 +513,7 @@ crearTopico(
 );
 
 
-crearTopico(
+crearPregunta(
         "Pruebas con MockMvc",
         "Estoy probando controladores y falla la petición.",
         springBoot,
@@ -521,7 +521,7 @@ crearTopico(
 );
 
 
-crearTopico(
+crearPregunta(
         "Problema con Spring Boot Test",
         "Los tests no levantan el contexto.",
         springBoot,
@@ -529,7 +529,7 @@ crearTopico(
 );
 
 
-crearTopico(
+crearPregunta(
         "Subir archivos con Spring Boot",
         "Necesito guardar imágenes enviadas desde formulario.",
         springBoot,
@@ -537,7 +537,7 @@ crearTopico(
 );
 
 
-crearTopico(
+crearPregunta(
         "Generar documentación con Swagger",
         "Quiero documentar mis endpoints REST.",
         springBoot,
@@ -545,7 +545,7 @@ crearTopico(
 );
 
 
-crearTopico(
+crearPregunta(
         "Problema con autenticación Bearer Token",
         "Insomnia no envía correctamente el token.",
         security,
@@ -553,7 +553,7 @@ crearTopico(
 );
 
 
-crearTopico(
+crearPregunta(
         "Guardar fechas con LocalDateTime",
         "La fecha almacenada no coincide.",
         java,
@@ -561,7 +561,7 @@ crearTopico(
 );
 
 
-crearTopico(
+crearPregunta(
         "Error con zona horaria en Java",
         "Las fechas aparecen con horas diferentes.",
         java,
@@ -569,7 +569,7 @@ crearTopico(
 );
 
 
-crearTopico(
+crearPregunta(
         "Crear filtros dinámicos con JPA",
         "Necesito búsquedas con varios parámetros.",
         jpa,
@@ -577,7 +577,7 @@ crearTopico(
 );
 
 
-crearTopico(
+crearPregunta(
         "Problema con application.properties",
         "Spring sigue usando valores antiguos.",
         springBoot,
@@ -585,7 +585,7 @@ crearTopico(
 );
 
 
-crearTopico(
+crearPregunta(
         "Optimizar consultas Hibernate",
         "La aplicación hace demasiadas consultas.",
         jpa,
@@ -593,7 +593,7 @@ crearTopico(
 );
 
 
-crearTopico(
+crearPregunta(
         "Problema con N+1 en Hibernate",
         "Hibernate genera demasiadas consultas.",
         jpa,
@@ -601,7 +601,7 @@ crearTopico(
 );
 
 
-crearTopico(
+crearPregunta(
         "Dockerizar aplicación Spring Boot",
         "Quiero crear una imagen Docker.",
         docker,
@@ -609,7 +609,7 @@ crearTopico(
 );
 
 
-crearTopico(
+crearPregunta(
         "Configurar variables secretas en producción",
         "Necesito proteger credenciales.",
         docker,
@@ -617,7 +617,7 @@ crearTopico(
 );
 
 
-crearTopico(
+crearPregunta(
         "Crear roles y permisos con Spring Security",
         "Quiero restringir acceso según usuario.",
         security,
@@ -625,7 +625,7 @@ crearTopico(
 );
 
 
-crearTopico(
+crearPregunta(
         "Problema al desplegar Spring Boot",
         "Funciona localmente pero falla en servidor.",
         docker,
@@ -633,7 +633,7 @@ crearTopico(
 );
 
 
-crearTopico(
+crearPregunta(
         "Conectar frontend React con Spring Boot",
         "El frontend no logra comunicarse con la API.",
         frontend,
@@ -641,7 +641,7 @@ crearTopico(
 );
 
 
-crearTopico(
+crearPregunta(
         "Error general en aplicación Spring Boot",
         "La aplicación falla y no sé qué capa está fallando.",
         springBoot,
@@ -649,7 +649,7 @@ crearTopico(
 );
     }
 
-private void crearTopico(
+private void crearPregunta(
         String titulo,
         String mensaje,
         Curso curso,
@@ -657,35 +657,35 @@ private void crearTopico(
 ){
 
 
-    Topico topico = new Topico();
+    Pregunta pregunta = new Pregunta();
 
 
-    topico.setTitulo(titulo);
+    pregunta.setTitulo(titulo);
 
-    topico.setMensaje(mensaje);
-
-
-    topico.setCurso(curso);
+    pregunta.setMensaje(mensaje);
 
 
-    topico.setAutor(
+    pregunta.setCurso(curso);
+
+
+    pregunta.setAutor(
         faker.options()
         .nextElement(usuarioRepository.findAll())
     );
 
 
-    topico.setFechaCreacion(
+    pregunta.setFechaCreacion(
         LocalDateTime.now()
     );
 
 
-    topico.setActivo(true);
+    pregunta.setActivo(true);
 
 
-    topico.setStatus(status);
+    pregunta.setStatus(status);
 
 
-    topicoRepository.save(topico);
+    preguntaRepository.save(pregunta);
 
 
 
@@ -693,7 +693,7 @@ private void crearTopico(
 
     private void crearRespuestas() {
 
-        List<Topico> topicos = topicoRepository.findAll();
+        List<Pregunta> preguntas = preguntaRepository.findAll();
 
         List<Usuario> usuarios = usuarioRepository.findAll();
 
@@ -1051,14 +1051,14 @@ private void crearTopico(
 
         };
 
-  for(int i = 0; i < topicos.size(); i++){
+  for(int i = 0; i < preguntas.size(); i++){
 
 
-        Topico topico = topicos.get(i);
+        Pregunta pregunta = preguntas.get(i);
 
 
 
-        if(topico.getStatus() == Status.SIN_RESPUESTA){
+        if(pregunta.getStatus() == Status.SIN_RESPUESTA){
 
             continue;
 
@@ -1082,8 +1082,8 @@ private void crearTopico(
             );
 
 
-            respuesta.setTopico(
-                    topico
+            respuesta.setPregunta(
+                    pregunta
             );
 
             respuesta.setFechaCreacion(
@@ -1099,7 +1099,7 @@ private void crearTopico(
 
 
             if(
-                topico.getStatus() == Status.RESUELTO
+                pregunta.getStatus() == Status.RESUELTO
                 &&
                 j == 0
             ){

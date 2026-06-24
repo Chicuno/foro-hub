@@ -49,15 +49,15 @@ public class SecurityConfigurations {
 
                         .requestMatchers(HttpMethod.POST, "/usuarios").hasRole("ADMINISTRADOR")
                         .requestMatchers(HttpMethod.GET, "/usuarios").hasAnyRole("ADMINISTRADOR", "PROFESOR")
-                        .requestMatchers(HttpMethod.GET, "/usuarios/{usuarioId}/topicos").hasAnyRole("ADMINISTRADOR", "PROFESOR", "ALUMNO")
+                        .requestMatchers(HttpMethod.GET, "/usuarios/{usuarioId}/preguntas").hasAnyRole("ADMINISTRADOR", "PROFESOR", "ALUMNO")
                         .requestMatchers(HttpMethod.DELETE, "/usuarios/{id}").hasAnyRole("ADMINISTRADOR")
 
-                        .requestMatchers(HttpMethod.POST, "/topicos").hasAnyRole("ADMINISTRADOR", "PROFESOR", "ALUMNO")
-                        .requestMatchers(HttpMethod.GET, "/topicos").hasAnyRole("ADMINISTRADOR", "PROFESOR", "ALUMNO")
-                        .requestMatchers(HttpMethod.GET, "/topicos/{id}").hasAnyRole("ADMINISTRADOR", "PROFESOR", "ALUMNO")
-                        .requestMatchers(HttpMethod.GET, "/topicos/{id}/respuestas").hasAnyRole("ADMINISTRADOR", "PROFESOR", "ALUMNO")
-                        .requestMatchers(HttpMethod.PUT, "/topicos/{id}").authenticated()
-                        .requestMatchers(HttpMethod.DELETE, "/topicos/{id}").hasAnyRole("ADMIN", "PROFESOR")
+                        .requestMatchers(HttpMethod.POST, "/preguntas").hasAnyRole("ADMINISTRADOR", "PROFESOR", "ALUMNO")
+                        .requestMatchers(HttpMethod.GET, "/preguntas").hasAnyRole("ADMINISTRADOR", "PROFESOR", "ALUMNO")
+                        .requestMatchers(HttpMethod.GET, "/preguntas/{id}").hasAnyRole("ADMINISTRADOR", "PROFESOR", "ALUMNO")
+                        .requestMatchers(HttpMethod.GET, "/preguntas/{id}/respuestas").hasAnyRole("ADMINISTRADOR", "PROFESOR", "ALUMNO")
+                        .requestMatchers(HttpMethod.PUT, "/preguntas/{id}").authenticated()
+                        .requestMatchers(HttpMethod.DELETE, "/preguntas/{id}").hasAnyRole("ADMIN", "PROFESOR")
 
                         .requestMatchers(HttpMethod.POST, "/respuestas").hasAnyRole("ADMINISTRADOR", "PROFESOR", "ALUMNO")
                         .requestMatchers(HttpMethod.GET, "/respuestas").hasAnyRole("ADMINISTRADOR", "PROFESOR", "ALUMNO")

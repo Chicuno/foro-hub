@@ -1,6 +1,6 @@
 package com.fernandez.foro_hub.infra.security;
 
-import com.fernandez.foro_hub.domain.topico.TopicoRepository;
+import com.fernandez.foro_hub.domain.pregunta.PreguntaRepository;
 import com.fernandez.foro_hub.domain.respuesta.RespuestaRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
@@ -10,11 +10,11 @@ import org.springframework.stereotype.Service;
 public class SecurityService {
 
     @Autowired
-    private TopicoRepository topicoRepository;
+    private PreguntaRepository preguntaRepository;
     @Autowired
     private RespuestaRepository respuestaRepository;
 
-    public boolean puedeEditarTopico(Authentication authentication, Long topicoId) {
+    public boolean puedeEditarPregunta(Authentication authentication, Long preguntaId) {
         if (authentication == null) return false;
 
         boolean isAdminOrProfesor = authentication.getAuthorities().stream()
@@ -27,13 +27,13 @@ public class SecurityService {
 
         return authentication.getAuthorities().stream()
                 .anyMatch(auth -> auth.getAuthority().equals("ROLE_ALUMNO"))
-                && esPropietarioDelTopico(topicoId, authentication);
+                && esPropietarioDeLaPregunta(preguntaId, authentication);
     }
 
-    public boolean esPropietarioDelTopico(Long topicoId, Authentication authentication) {
-        if (authentication == null || topicoId == null) return false;
+    public boolean esPropietarioDeLaPregunta(Long preguntaId, Authentication authentication) {
+        if (authentication == null || preguntaId == null) return false;
         String username = authentication.getName();
-        return topicoRepository.existsByIdAndAutorNombreUsuarioAndActivoTrue(topicoId, username);
+        return preguntaRepository.existsByIdAndAutorNombreUsuarioAndActivoTrue(preguntaId, username);
     }
 
     public boolean puedeEditarRespuesta(Authentication authentication, Long respuestaId) {

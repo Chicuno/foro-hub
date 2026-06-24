@@ -1,10 +1,10 @@
-package com.fernandez.foro_hub.domain.topico;
+package com.fernandez.foro_hub.domain.pregunta;
 
 
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 
-public record DatosCreacionTopico(
+public record DatosCreacionPregunta(
         @NotBlank String titulo,
         @NotBlank String mensaje,
         @NotNull Long idUsuario,

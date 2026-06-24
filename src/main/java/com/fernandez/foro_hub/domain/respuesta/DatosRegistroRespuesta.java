@@ -6,7 +6,7 @@ public record DatosRegistroRespuesta(
 @NotNull
 String mensaje,
 @NotNull
-Long topicoId,
+Long preguntaId,
 @NotNull
 Long autorId
 ) {

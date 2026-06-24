@@ -1,6 +1,6 @@
 package com.fernandez.foro_hub.domain.respuesta;
 
-import com.fernandez.foro_hub.domain.topico.Topico;
+import com.fernandez.foro_hub.domain.pregunta.Pregunta;
 import com.fernandez.foro_hub.domain.usuario.Usuario;
 import jakarta.persistence.*;
 import jakarta.validation.Valid;
@@ -24,8 +24,8 @@ public class Respuesta {
     private String mensaje;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "topico_id")
-    private Topico topico;
+    @JoinColumn(name = "pregunta_id")
+    private Pregunta pregunta;
 
     private LocalDateTime fechaCreacion;
 

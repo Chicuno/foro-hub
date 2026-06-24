@@ -1,4 +1,4 @@
-package com.fernandez.foro_hub.domain.topico;
+package com.fernandez.foro_hub.domain.pregunta;
 
 public enum Status {
     SIN_RESPUESTA,

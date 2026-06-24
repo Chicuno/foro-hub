@@ -1,7 +1,7 @@
 package com.fernandez.foro_hub.domain.usuario;
 
 import com.fernandez.foro_hub.domain.respuesta.Respuesta;
-import com.fernandez.foro_hub.domain.topico.Topico;
+import com.fernandez.foro_hub.domain.pregunta.Pregunta;
 import jakarta.persistence.*;
 import jakarta.validation.Valid;
 import lombok.*;
@@ -36,7 +36,7 @@ public class Usuario implements UserDetails {
     private boolean activo = true;
 
     @OneToMany(mappedBy = "autor", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-    private List<Topico> topicos = new ArrayList<>();
+    private List<Pregunta> preguntas = new ArrayList<>();
 
     @OneToMany(mappedBy = "autor", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private List<Respuesta> respuestas = new ArrayList<>();
@@ -49,9 +49,9 @@ public class Usuario implements UserDetails {
         this.perfil = datos.perfil();
     }
 
-    public void agregarTopico(Topico topico) {
-        this.topicos.add(topico);
-        topico.setAutor(this);
+    public void agregarPregunta(Pregunta pregunta) {
+        this.preguntas.add(pregunta);
+        pregunta.setAutor(this);
     }
 
     public void agregarRespuesta(Respuesta respuesta) {

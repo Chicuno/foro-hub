@@ -5,7 +5,7 @@ import java.time.LocalDateTime;
 public record DatosDetalleRespuesta(
         Long id,
         String mensaje,
-        Long topicoId,
+        Long preguntaId,
         LocalDateTime fechaCreacion,
         Long autorId,
         boolean solucion
@@ -15,7 +15,7 @@ public record DatosDetalleRespuesta(
         this(
                 respuesta.getId(),
                 respuesta.getMensaje(),
-                respuesta.getTopico().getId(),
+                respuesta.getPregunta().getId(),
                 respuesta.getFechaCreacion(),
                 respuesta.getAutor().getId(),
                 respuesta.isSolucion()

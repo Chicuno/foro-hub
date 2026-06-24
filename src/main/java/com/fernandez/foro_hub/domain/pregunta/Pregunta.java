@@ -1,4 +1,4 @@
-package com.fernandez.foro_hub.domain.topico;
+package com.fernandez.foro_hub.domain.pregunta;
 
 import com.fernandez.foro_hub.domain.curso.Curso;
 import com.fernandez.foro_hub.domain.respuesta.Respuesta;
@@ -11,14 +11,14 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
-@Table(name = "topicos")
-@Entity(name = "Topico")
+@Table(name = "preguntas")
+@Entity(name = "Pregunta")
 @Getter
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
 
-public class Topico {
+public class Pregunta {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -42,18 +42,18 @@ public class Topico {
     @JoinColumn(name = "curso_id")
     private Curso curso;
 
-    @OneToMany(mappedBy = "topico", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "pregunta", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private List<Respuesta> respuestas = new ArrayList<>();
 
     private boolean activo;
 
     public void agregarRespuesta(Respuesta respuesta) {
         this.respuestas.add(respuesta);
-        respuesta.setTopico(this);
+        respuesta.setPregunta(this);
         this.status = Status.RESPONDIDO;
     }
 
-    public void actualizarInformaciones(@Valid DatosActualizacionTopico datos) {
+    public void actualizarInformaciones(@Valid DatosActualizacionPregunta datos) {
         if(datos.titulo() != null) {
             this.titulo = datos.titulo();
         }
@@ -69,10 +69,10 @@ public class Topico {
     @Override
     public boolean equals(Object o) {
     if (this == o) return true;
-    if (!(o instanceof Topico)) return false;
-    Topico topico = (Topico) o;
+    if (!(o instanceof Pregunta)) return false;
+    Pregunta pregunta = (Pregunta) o;
     // Si el ID es nulo (no guardado), solo son el mismo objeto si comparten la misma referencia en memoria
-    return id != null && id.equals(topico.getId());
+    return id != null && id.equals(pregunta.getId());
 }
 
     @Override

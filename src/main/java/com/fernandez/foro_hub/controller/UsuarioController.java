@@ -1,7 +1,7 @@
 package com.fernandez.foro_hub.controller;
 
-import com.fernandez.foro_hub.domain.topico.DatosListaTopico;
-import com.fernandez.foro_hub.domain.topico.TopicoRepository;
+import com.fernandez.foro_hub.domain.pregunta.DatosListaPregunta;
+import com.fernandez.foro_hub.domain.pregunta.PreguntaRepository;
 import com.fernandez.foro_hub.domain.ValidacionException;
 import com.fernandez.foro_hub.domain.usuario.DatosDetalleUsuario;
 import com.fernandez.foro_hub.domain.usuario.DatosRegistroUsuario;
@@ -28,7 +28,7 @@ public class UsuarioController {
     @Autowired 
     private UsuarioRepository repository;
     @Autowired 
-    private TopicoRepository topicoRepository;
+    private PreguntaRepository preguntaRepository;
 
     @Transactional
     @PostMapping
@@ -49,10 +49,10 @@ public class UsuarioController {
         return ResponseEntity.ok(page);
     }
 
-    @GetMapping("/{usuarioId}/topicos")
-    public ResponseEntity<Page<DatosListaTopico>> listarTopicosDeUsuario(@PathVariable Long usuarioId, @PageableDefault(size=10, sort={"fechaCreacion"}, direction = Sort.Direction.DESC) Pageable paginacion){
-        var page = topicoRepository.findByAutorIdAndActivoTrue(usuarioId, paginacion)
-                .map(DatosListaTopico::new);
+    @GetMapping("/{usuarioId}/preguntas")
+    public ResponseEntity<Page<DatosListaPregunta>> listarPreguntasDeUsuario(@PathVariable Long usuarioId, @PageableDefault(size=10, sort={"fechaCreacion"}, direction = Sort.Direction.DESC) Pageable paginacion){
+        var page = preguntaRepository.findByAutorIdAndActivoTrue(usuarioId, paginacion)
+                .map(DatosListaPregunta::new);
         return ResponseEntity.ok(page);
     }
     @Transactional

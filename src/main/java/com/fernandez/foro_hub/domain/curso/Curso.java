@@ -1,6 +1,6 @@
 package com.fernandez.foro_hub.domain.curso;
 
-import com.fernandez.foro_hub.domain.topico.Topico;
+import com.fernandez.foro_hub.domain.pregunta.Pregunta;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -27,16 +27,16 @@ public class Curso {
     private Categoria categoria;
 
     @OneToMany(mappedBy = "curso", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-    private List<Topico> topicos = new ArrayList<>();
+    private List<Pregunta> preguntas = new ArrayList<>();
 
     public Curso(DatosRegistroCurso datos) {
         this.nombre = datos.nombre();
         this.categoria = datos.categoria();
     }
 
-    public void agregarTopico(Topico topico) {
-        this.topicos.add(topico);
-        topico.setCurso(this);
+    public void agregarPregunta(Pregunta pregunta) {
+        this.preguntas.add(pregunta);
+        pregunta.setCurso(this);
     }
 }
 
