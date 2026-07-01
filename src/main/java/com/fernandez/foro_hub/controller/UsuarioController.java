@@ -50,6 +50,7 @@ public class UsuarioController {
     }
 
     @GetMapping("/{usuarioId}/preguntas")
+    @Transactional(readOnly = true)
     public ResponseEntity<Page<DatosListaPregunta>> listarPreguntasDeUsuario(@PathVariable Long usuarioId, @PageableDefault(size=10, sort={"fechaCreacion"}, direction = Sort.Direction.DESC) Pageable paginacion){
         var page = preguntaRepository.findByAutorIdAndActivoTrue(usuarioId, paginacion)
                 .map(DatosListaPregunta::new);

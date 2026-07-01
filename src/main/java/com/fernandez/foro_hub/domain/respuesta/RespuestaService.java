@@ -6,6 +6,8 @@ import com.fernandez.foro_hub.domain.usuario.UsuarioRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 
 import java.time.LocalDateTime;
 
@@ -27,7 +29,7 @@ public class RespuestaService {
         }
         var pregunta = preguntaRepository.findById(datos.preguntaId()).get();
         var usuario = usuarioRepository.findById(datos.autorId()).get();
-        var respuesta = new Respuesta(null, datos.mensaje(), pregunta, LocalDateTime.now(), usuario,  false);
+        var respuesta = new Respuesta(null, datos.mensaje(), pregunta, LocalDateTime.now(), usuario, false, true);
         pregunta.agregarRespuesta(respuesta);
         usuario.agregarRespuesta(respuesta);
         respuestaRepository.save(respuesta);
@@ -46,10 +48,34 @@ public class RespuestaService {
 
     @Transactional(readOnly = true)
     public DatosDetalleRespuesta detallar(Long id) {
-        if (!respuestaRepository.existsById(id)) {
+        var respuesta = respuestaRepository.findByIdAndActivoTrue(id);
+        if (respuesta == null) {
             throw new ValidacionException("Id de la respuesta informada no existe");
         }
-        var respuesta = respuestaRepository.getReferenceById(id);
         return new DatosDetalleRespuesta(respuesta);
+    }
+
+    @Transactional(readOnly = true)
+    public Page<DatosDetalleRespuesta> listarPorPregunta(Long preguntaId, Pageable paginacion) {
+        return respuestaRepository.findByPreguntaIdAndActivoTrue(preguntaId, paginacion)
+                .map(DatosDetalleRespuesta::new);
+    }
+
+    @Transactional
+    public void eliminar(Long id) {
+        var respuesta = respuestaRepository.findByIdAndActivoTrue(id);
+        if (respuesta == null) {
+            throw new ValidacionException("Id de la respuesta informada no existe");
+        }
+        respuesta.eliminar();
+    }
+
+    @Transactional
+    public void marcarComoSolucion(Long id) {
+        var respuesta = respuestaRepository.findByIdAndActivoTrue(id);
+        if (respuesta == null) {
+            throw new ValidacionException("Id de la respuesta informada no existe");
+        }
+        respuesta.marcarComoSolucion();
     }
 }

@@ -48,7 +48,7 @@ public class SecurityConfigurations {
                         .requestMatchers(HttpMethod.GET, "/cursos/{id}").hasAnyRole("ADMINISTRADOR", "PROFESOR", "ALUMNO")
 
                         .requestMatchers(HttpMethod.POST, "/usuarios").hasRole("ADMINISTRADOR")
-                        .requestMatchers(HttpMethod.GET, "/usuarios").hasAnyRole("ADMINISTRADOR", "PROFESOR")
+                        .requestMatchers(HttpMethod.GET, "/usuarios").hasAnyRole("ADMINISTRADOR", "PROFESOR", "ALUMNO")
                         .requestMatchers(HttpMethod.GET, "/usuarios/{usuarioId}/preguntas").hasAnyRole("ADMINISTRADOR", "PROFESOR", "ALUMNO")
                         .requestMatchers(HttpMethod.DELETE, "/usuarios/{id}").hasAnyRole("ADMINISTRADOR")
 

@@ -50,7 +50,7 @@ public class Pregunta {
     public void agregarRespuesta(Respuesta respuesta) {
         this.respuestas.add(respuesta);
         respuesta.setPregunta(this);
-        this.status = Status.RESPONDIDO;
+        this.status = Status.RESPONDIDA;
     }
 
     public void actualizarInformaciones(@Valid DatosActualizacionPregunta datos) {

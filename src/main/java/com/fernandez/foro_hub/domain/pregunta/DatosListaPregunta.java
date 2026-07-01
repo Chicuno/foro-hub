@@ -7,7 +7,10 @@ public record DatosListaPregunta(
         String titulo,
         LocalDateTime fechaCreacion,
         Long autorId,
-        Long cursoId
+        String autorNombre,
+        Long cursoId,
+        Status status,
+        int numeroRespuestas
 ) {
     public DatosListaPregunta(Pregunta pregunta) {
         this(
@@ -15,7 +18,10 @@ public record DatosListaPregunta(
                 pregunta.getTitulo(),
                 pregunta.getFechaCreacion(),
                 pregunta.getAutor().getId(),
-                pregunta.getCurso().getId()
+                pregunta.getAutor().getNombreUsuario(),
+                pregunta.getCurso().getId(),
+                pregunta.getStatus(),
+                pregunta.getRespuestas() == null ? 0 : pregunta.getRespuestas().size()
         );
     }
 }

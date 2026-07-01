@@ -11,6 +11,7 @@ public record DatosDetallePregunta(
         LocalDateTime fechaCreacion,
         Status status,
         Long autorId,
+        String autorNombre,
         Long cursoId,
         List<Long> respuestasId
 ) {
@@ -23,6 +24,7 @@ public record DatosDetallePregunta(
                 pregunta.getFechaCreacion(),
                 pregunta.getStatus(),
                 pregunta.getAutor().getId(),
+                pregunta.getAutor().getNombreUsuario(),
                 pregunta.getCurso().getId(),
                 pregunta.getRespuestas().stream().map(Respuesta::getId).toList()
         );

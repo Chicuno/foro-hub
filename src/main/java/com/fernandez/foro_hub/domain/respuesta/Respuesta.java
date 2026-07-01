@@ -35,6 +35,16 @@ public class Respuesta {
 
     private boolean solucion;
 
+    private boolean activo = true;
+
+    @Column(name = "activo")
+    public boolean isActivo() {
+        return activo;
+    }
+
+    public void eliminar() {
+        this.activo = false;
+    }
 
     public void marcarComoSolucion() {
         this.solucion = true;

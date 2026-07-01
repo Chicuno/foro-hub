@@ -1,5 +1,6 @@
 package com.fernandez.foro_hub.controller;
 
+import com.fernandez.foro_hub.domain.ValidacionException;
 import com.fernandez.foro_hub.domain.curso.Curso;
 import com.fernandez.foro_hub.domain.curso.CursoRepository;
 import com.fernandez.foro_hub.domain.curso.DatosDetalleCurso;
@@ -42,7 +43,15 @@ public class CursoController {
         return ResponseEntity.ok(page);
     }
 
+    @GetMapping("/{cursoId}")
+    public ResponseEntity<DatosDetalleCurso> obtenerCurso(@PathVariable Long cursoId) {
+        var curso = repository.findById(cursoId)
+                .orElseThrow(() -> new ValidacionException("Curso no encontrado"));
+        return ResponseEntity.ok(new DatosDetalleCurso(curso));
+    }
+
     @GetMapping("/{cursoId}/preguntas")
+    @Transactional(readOnly = true)
     public ResponseEntity<Page<DatosListaPregunta>> listarPreguntasDelCurso(@PathVariable Long cursoId, @PageableDefault(size=10, sort={"fechaCreacion"}, direction = Sort.Direction.DESC) Pageable paginacion){
         var page = preguntaRepository.findByCursoIdAndActivoTrue(cursoId, paginacion)
                 .map(DatosListaPregunta::new);

@@ -8,6 +8,7 @@ import java.util.Optional;
 
 public interface UsuarioRepository extends JpaRepository<Usuario, Long> {
     Usuario findByNombreUsuarioAndActivoTrue(String nombreUsuario);
+    Usuario findByNombreUsuarioIgnoreCaseAndActivoTrue(String nombreUsuario);
     Page<Usuario> findByActivoTrue(Pageable paginacion);
     Optional<Usuario> findByIdAndActivoTrue(Long id);
 }

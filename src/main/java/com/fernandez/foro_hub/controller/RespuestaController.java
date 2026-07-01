@@ -31,6 +31,7 @@ public class RespuestaController {
     }
 
     @GetMapping
+    @Transactional(readOnly = true)
     public ResponseEntity<Page<DatosDetalleRespuesta>> listar(@PageableDefault(size=10, sort={"fechaCreacion"}) Pageable paginacion){
 
         var page = repository.findAll(paginacion)
@@ -39,9 +40,17 @@ public class RespuestaController {
     }
 
     @GetMapping("/{id}")
+    @Transactional(readOnly = true)
     public ResponseEntity<DatosDetalleRespuesta> detallar(@PathVariable Long id) {
         var respuesta = service.detallar(id);
         return ResponseEntity.ok(respuesta);
+    }
+
+    @GetMapping("/pregunta/{preguntaId}")
+    @Transactional(readOnly = true)
+    public ResponseEntity<Page<DatosDetalleRespuesta>> listarPorPregunta(@PathVariable Long preguntaId, @PageableDefault(size=10, sort={"fechaCreacion"}) Pageable paginacion){
+        var page = service.listarPorPregunta(preguntaId, paginacion);
+        return ResponseEntity.ok(page);
     }
 
     @PutMapping
@@ -49,5 +58,21 @@ public class RespuestaController {
     public ResponseEntity<DatosDetalleRespuesta> actualizar(@RequestBody @Valid DatosActualizacionRespuesta datos) {
         var respuesta = service.actualizar(datos);
         return ResponseEntity.ok(new DatosDetalleRespuesta(respuesta));
+    }
+
+    @DeleteMapping("/{id}")
+    @PreAuthorize("@securityService.puedeEliminarRespuesta(authentication, #id)")
+    @Transactional
+    public ResponseEntity<Void> eliminar(@PathVariable Long id) {
+        service.eliminar(id);
+        return ResponseEntity.noContent().build();
+    }
+
+    @PatchMapping("/{id}/solucion")
+    @PreAuthorize("@securityService.puedeMarcarSolucion(authentication, #id)")
+    @Transactional
+    public ResponseEntity<Void> marcarComoSolucion(@PathVariable Long id) {
+        service.marcarComoSolucion(id);
+        return ResponseEntity.noContent().build();
     }
 }

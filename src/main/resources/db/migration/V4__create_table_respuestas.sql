@@ -6,6 +6,7 @@ pregunta_id bigint not null,
 fecha_creacion timestamp not null,
 autor_id bigint not null,
 solucion boolean not null,
+activo boolean not null,
 
 primary key(id),
 

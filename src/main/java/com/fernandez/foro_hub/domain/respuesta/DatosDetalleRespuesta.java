@@ -8,6 +8,7 @@ public record DatosDetalleRespuesta(
         Long preguntaId,
         LocalDateTime fechaCreacion,
         Long autorId,
+        String autorNombre,
         boolean solucion
 ) {
 
@@ -18,6 +19,7 @@ public record DatosDetalleRespuesta(
                 respuesta.getPregunta().getId(),
                 respuesta.getFechaCreacion(),
                 respuesta.getAutor().getId(),
+                respuesta.getAutor().getNombreUsuario(),
                 respuesta.isSolucion()
         );
     }

@@ -55,6 +55,35 @@ public class SecurityService {
     public boolean esPropietarioDeLaRespuesta(Long respuestaId, Authentication authentication) {
         if (authentication == null || respuestaId == null) return false;
         String username = authentication.getName();
-        return respuestaRepository.existsByIdAndAutorNombreUsuario(respuestaId, username);
+        return respuestaRepository.existsByIdAndAutorNombreUsuarioAndActivoTrue(respuestaId, username);
+    }
+
+    public boolean puedeEliminarRespuesta(Authentication authentication, Long respuestaId) {
+        if (authentication == null) return false;
+
+        boolean isAdminOrProfesor = authentication.getAuthorities().stream()
+                .anyMatch(auth -> auth.getAuthority().equals("ROLE_ADMINISTRADOR") ||
+                        auth.getAuthority().equals("ROLE_PROFESOR"));
+
+        return isAdminOrProfesor;
+    }
+
+    public boolean puedeMarcarSolucion(Authentication authentication, Long respuestaId) {
+        if (authentication == null) return false;
+
+        boolean isAdminOrProfesor = authentication.getAuthorities().stream()
+                .anyMatch(auth -> auth.getAuthority().equals("ROLE_ADMINISTRADOR") ||
+                        auth.getAuthority().equals("ROLE_PROFESOR"));
+
+        if (isAdminOrProfesor) {
+            return true;
+        }
+
+        // El autor de la pregunta puede marcar una respuesta como solución
+        var respuesta = respuestaRepository.findById(respuestaId);
+        if (respuesta.isEmpty()) return false;
+
+        String username = authentication.getName();
+        return preguntaRepository.existsByIdAndAutorNombreUsuarioAndActivoTrue(respuesta.get().getPregunta().getId(), username);
     }
 }

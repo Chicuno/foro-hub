@@ -4,6 +4,7 @@ import com.fernandez.foro_hub.domain.ValidacionException;
 import com.fernandez.foro_hub.domain.curso.CursoRepository;
 import com.fernandez.foro_hub.domain.usuario.UsuarioRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import java.util.ArrayList;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -24,16 +25,21 @@ public class PreguntaService {
     @Transactional
     public DatosListaPregunta crear(DatosCreacionPregunta datos) {
 
+        if (datos.idUsuario() == null) {
+            throw new ValidacionException("El id del usuario es obligatorio");
+        }
+        if (datos.idCurso() == null) {
+            throw new ValidacionException("El id del curso es obligatorio");
+        }
         if (!cursoRepository.existsById(datos.idCurso())) {
             throw new ValidacionException("No existe un curso con el id informado");
         }
-
-        if (datos.idUsuario() != null && !usuarioRepository.existsById(datos.idUsuario())) {
+        if (!usuarioRepository.existsById(datos.idUsuario())) {
             throw new ValidacionException("No existe un usuario con el id informado");
         }
-        var curso = cursoRepository.findById(datos.idCurso()).get();
-        var usuario = usuarioRepository.findById(datos.idUsuario()).get();
-        var pregunta = new Pregunta(null, datos.titulo(), datos.mensaje(), LocalDateTime.now(), Status.SIN_RESPUESTA, usuario, curso, null, true);
+        var curso = cursoRepository.findById(datos.idCurso()).orElseThrow(() -> new ValidacionException("No existe un curso con el id informado"));
+        var usuario = usuarioRepository.findById(datos.idUsuario()).orElseThrow(() -> new ValidacionException("No existe un usuario con el id informado"));
+        var pregunta = new Pregunta(null, datos.titulo(), datos.mensaje(), LocalDateTime.now(), Status.SIN_RESPUESTA, usuario, curso, new ArrayList<>(), true);
         usuario.agregarPregunta(pregunta);
         curso.agregarPregunta(pregunta);
         preguntaRepository.save(pregunta);
@@ -55,11 +61,13 @@ public class PreguntaService {
         pregunta.eliminar();
     }
 
+    @Transactional(readOnly = true)
     public Page<DatosListaPregunta> listar(Pageable paginacion) {
         return preguntaRepository.findByActivoTrue(paginacion)
                 .map(DatosListaPregunta::new);
     }
 
+    @Transactional(readOnly = true)
     public Page<DatosListaPregunta> listarPorStatus(Status status, Pageable paginacion) {
         return preguntaRepository.findByStatusAndActivoTrue(status, paginacion)
                 .map(DatosListaPregunta::new);
