@@ -6,6 +6,7 @@ import { MessageSquare, BookOpen, Users, LogOut } from 'lucide-react'
 const Layout = () => {
   const { user, logout } = useAuth()
   const navigate = useNavigate()
+  const displayName = user?.nombre || user?.nombreUsuario || 'usuario'
 
   const handleLogout = () => {
     logout()
@@ -24,7 +25,7 @@ const Layout = () => {
             
             <div className="flex items-center space-x-4">
               <div className="text-sm text-gray-600">
-                Bienvenido, {user?.nombreUsuario}
+                ¡Hola, {displayName}!
               </div>
               <div className="flex items-center space-x-2">
                 <Link to="/cursos">

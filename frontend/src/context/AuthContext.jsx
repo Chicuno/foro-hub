@@ -1,5 +1,5 @@
 import { createContext, useContext, useState, useEffect } from 'react'
-import { authAPI } from '../services/api'
+import { authAPI, usuariosAPI } from '../services/api'
 
 const AuthContext = createContext(null)
 
@@ -8,35 +8,78 @@ export const AuthProvider = ({ children }) => {
   const [loading, setLoading] = useState(true)
 
   useEffect(() => {
-    const token = localStorage.getItem('token')
-    const userData = localStorage.getItem('user')
-    if (token) {
-      try {
-        const payload = JSON.parse(atob(token.split('.')[1]))
-        const exp = payload.exp * 1000 // Convertir a milisegundos
-        if (Date.now() < exp) {
-          const parsedUser = userData ? JSON.parse(userData) : {}
-          setUser({
-            nombreUsuario: parsedUser.nombreUsuario || payload.sub,
-            id: parsedUser.id || payload.userId
-          })
-        } else {
+    const loadUser = async () => {
+      const token = localStorage.getItem('token')
+      const userData = localStorage.getItem('user')
+
+      if (token) {
+        try {
+          const payload = JSON.parse(atob(token.split('.')[1]))
+          const exp = payload.exp * 1000
+
+          if (Date.now() < exp) {
+            const parsedUser = userData ? JSON.parse(userData) : {}
+            const username = parsedUser.nombreUsuario || payload.sub
+            const userId = parsedUser.id || payload.userId
+            let nombre = parsedUser.nombre || username
+
+            try {
+              const response = await usuariosAPI.listar(0, 100)
+              const usuarioEncontrado = response.content?.find(
+                (usuario) => usuario.nombreUsuario === username
+              )
+
+              if (usuarioEncontrado?.nombre) {
+                nombre = usuarioEncontrado.nombre
+              }
+            } catch (error) {
+              console.error('Error al cargar el nombre del usuario:', error)
+            }
+
+            const userProfile = {
+              nombreUsuario: username,
+              nombre,
+              id: userId
+            }
+
+            localStorage.setItem('user', JSON.stringify(userProfile))
+            setUser(userProfile)
+          } else {
+            localStorage.removeItem('token')
+            localStorage.removeItem('user')
+          }
+        } catch (error) {
           localStorage.removeItem('token')
           localStorage.removeItem('user')
         }
-      } catch (error) {
-        localStorage.removeItem('token')
-        localStorage.removeItem('user')
       }
+
+      setLoading(false)
     }
-    setLoading(false)
+
+    loadUser()
   }, [])
 
   const login = async (nombreUsuario, contrasena) => {
     try {
       const data = await authAPI.login(nombreUsuario, contrasena)
       const payload = JSON.parse(atob(data.token.split('.')[1]))
-      const user = { nombreUsuario, id: payload.userId }
+      let nombre = nombreUsuario
+
+      try {
+        const response = await usuariosAPI.listar(0, 100)
+        const usuarioEncontrado = response.content?.find(
+          (usuario) => usuario.nombreUsuario === nombreUsuario
+        )
+
+        if (usuarioEncontrado?.nombre) {
+          nombre = usuarioEncontrado.nombre
+        }
+      } catch (error) {
+        console.error('Error al cargar el nombre del usuario:', error)
+      }
+
+      const user = { nombreUsuario, nombre, id: payload.userId }
       localStorage.setItem('token', data.token)
       localStorage.setItem('user', JSON.stringify(user))
       setUser(user)
